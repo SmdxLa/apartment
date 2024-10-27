@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.crcbest.web.admin.mapper.FeeValueMapper">
+
+    <select id="selectListByApartmentId" resultType="top.crcbest.web.admin.vo.fee.FeeValueVo">
+        select v.id,
+               v.name,
+               unit,
+               fee_key_id,
+               k.name fee_key_name
+        from (select id,
+                     name,
+                     unit,
+                     fee_key_id
+              from fee_value
+              where is_deleted = 0
+                and id in (select fee_value_id
+                           from apartment_fee_value
+                           where is_deleted = 0
+                             and apartment_id = #{id})) v
+                 left join
+             (select id,
+                     name
+              from fee_key
+              where is_deleted = 0) k
+             on v.fee_key_id = k.id
+    </select>
+</mapper>

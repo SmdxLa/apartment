@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.crcbest.web.admin.mapper.SystemUserMapper">
+
+    <select id="pageItem" resultType="top.crcbest.web.admin.vo.system.user.SystemUserItemVo">
+        select su.id,
+               username,
+               su.name,
+               type,
+               phone,
+               avatar_url,
+               additional_info,
+               post_id,
+               status,
+               sp.name post_name
+        from (select id,
+                     username,
+                     password,
+                     name,
+                     type,
+                     phone,
+                     avatar_url,
+                     additional_info,
+                     post_id,
+                     status
+              from system_user
+                <where>
+                    is_deleted=0
+                    <if test="queryVo.name != null and queryVo.name != ''">
+                        and name like concat('%',#{queryVo.name},'%')
+                    </if>
+                    <if test="queryVo.phone !=null and queryVo.phone != ''">
+                        and phone like concat('%',#{queryVo.phone},'%')
+                    </if>
+                </where>
+              ) su
+                 left join
+             (select id,
+                     name
+              from system_post
+              where is_deleted = 0) sp
+             on su.post_id = sp.id
+    </select>
+</mapper>
