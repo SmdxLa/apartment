@@ -8,6 +8,5 @@ import org.springframework.context.annotation.Configuration;
  * @date 2024/10/27
  */
 @Configuration
-@MapperScan("top.crcbest.web.*.mapper")
 public class MybatisPlusConfiguration {
 }
