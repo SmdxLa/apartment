@@ -16,7 +16,7 @@ public class BaseEntity implements Serializable{
     private Long id;
 
     @Schema(description = "创建时间")
-    @JsonIgnore
+    @JsonIgnore//不返回给前端
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date createTime;
 
@@ -27,7 +27,7 @@ public class BaseEntity implements Serializable{
 
     @Schema(description = "逻辑删除")
     @JsonIgnore
-    @TableLogic
+//    @TableLogic 已经在配置文件中配置了
     @TableField("is_deleted")
     private Byte isDeleted;
 

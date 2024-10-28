@@ -1,10 +1,13 @@
+server:
+  port: 80
+
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://8.222.199.189:3306/<database>?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
+    url: jdbc:mysql://8.222.199.189:3306/lease?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
     username: root
-    password: Crc666==!
-    hikari:
+    password: Crc666==1!
+    hikari: #Hikari连接池配置，
       connection-test-query: SELECT 1 # 自动检测连接
       connection-timeout: 60000 #数据库连接超时时间,默认30秒
       idle-timeout: 500000 #空闲连接存活最大时间，默认600000（10分钟）
@@ -17,3 +20,8 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted #逻辑删除字段，只对MybatisPlus的自带方法生效
+      logic-delete-value: 1
+      lgic-not-delete-value: 0
