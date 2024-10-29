@@ -24,8 +24,8 @@ public class LabelController {
     @Operation(summary = "（根据类型）查询标签列表")
     @GetMapping("list")
     public Result<List<LabelInfo>> labelList(@RequestParam(required = false) ItemType type) {
-        labelService.list(new LambdaQueryWrapper<LabelInfo>().eq(LabelInfo::getType, type));
-        return Result.ok();
+
+        return Result.ok(labelService.list(new LambdaQueryWrapper<LabelInfo>().eq(LabelInfo::getType, type)));
     }
 
     @Operation(summary = "新增或修改标签信息")

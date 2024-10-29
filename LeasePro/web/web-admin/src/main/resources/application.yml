@@ -25,3 +25,10 @@ mybatis-plus:
       logic-delete-field: isDeleted #逻辑删除字段，只对MybatisPlus的自带方法生效
       logic-delete-value: 1
       lgic-not-delete-value: 0
+
+
+minio:
+  endpoint: https://s3.stulove.tech
+  access-key: admin
+  secret-key: crcisbest
+  bucket-name: lease

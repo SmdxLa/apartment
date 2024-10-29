@@ -58,8 +58,11 @@ public class AttrController {
         List<AttrKeyVo> attrKeyVoList = new ArrayList<>();//最终返回的结果
         List<AttrKey> attrKeys = attrKeyService.list();//查出所有的属性名称
         attrKeys.forEach(attrKey -> {
+            System.out.println(attrKey.getId());
+            System.out.println(attrKey.toString());
             List<AttrValue> attrValuesList =//查出当前属性的值
-                    attrValueService.list(new LambdaQueryWrapper<AttrValue>().eq(AttrValue::getId, attrKey.getId()));
+                    attrValueService.list(new LambdaQueryWrapper<AttrValue>().eq(AttrValue::getAttrKeyId, attrKey.getId()));
+            System.out.println(attrValuesList.toString());
             AttrKeyVo attrKeyVo = new AttrKeyVo();
             BeanUtils.copyProperties(attrKey, attrKeyVo);
             attrKeyVo.setAttrValueList(attrValuesList);

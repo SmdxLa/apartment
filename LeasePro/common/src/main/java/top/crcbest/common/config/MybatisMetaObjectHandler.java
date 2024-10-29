@@ -2,6 +2,7 @@ package top.crcbest.common.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * @date 2024/10/27
  */
 
+@Component
 public class MybatisMetaObjectHandler implements MetaObjectHandler {
 
     @Override
