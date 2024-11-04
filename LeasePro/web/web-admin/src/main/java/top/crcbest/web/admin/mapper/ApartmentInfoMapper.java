@@ -1,7 +1,10 @@
 package top.crcbest.web.admin.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import top.crcbest.model.entity.ApartmentInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import top.crcbest.web.admin.vo.apartment.ApartmentItemVo;
+import top.crcbest.web.admin.vo.apartment.ApartmentQueryVo;
 
 /**
 * @author liubo
@@ -11,6 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
+    IPage<ApartmentItemVo> pageApartmentItemByQuery(IPage<ApartmentItemVo> page, ApartmentQueryVo queryVo);
 }
 
 

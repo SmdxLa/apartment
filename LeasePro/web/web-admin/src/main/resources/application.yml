@@ -32,3 +32,6 @@ minio:
   access-key: admin
   secret-key: crcisbest
   bucket-name: lease
+
+Springdoc:
+  default-flat-param-object: true  #将参数对象展开为单个参数，方便调试

@@ -4,87 +4,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.crcbest.web.admin.mapper.ApartmentInfoMapper">
 
-    <select id="pageItem" resultType="top.crcbest.web.admin.vo.apartment.ApartmentItemVo">
-        select id,
-               name,
-               introduction,
-               district_id,
-               district_name,
-               city_id,
-               city_name,
-               province_id,
-               province_name,
-               address_detail,
-               latitude,
-               longitude,
-               phone,
-               is_release,
-               ifnull(tc.cnt, 0)                     total_room_count,
-               ifnull(tc.cnt, 0) - ifnull(cc.cnt, 0) free_room_count
-        from (select id,
-                     name,
-                     introduction,
-                     district_id,
-                     district_name,
-                     city_id,
-                     city_name,
-                     province_id,
-                     province_name,
-                     address_detail,
-                     latitude,
-                     longitude,
-                     phone,
-                     is_release
-              from apartment_info
-                <where>
-                    is_deleted=0
-                    <if test="queryVo.provinceId != null">
-                        and province_id = #{queryVo.provinceId}
-                    </if>
-                    <if test="queryVo.cityId != null">
-                        and city_id = #{queryVo.cityId}
-                    </if>
-                    <if test="queryVo.districtId != null">
-                        and district_id = #{queryVo.districtId}
-                    </if>
-                </where>
-              ) ai
-                 left join
-             (select apartment_id,
-                     count(*) cnt
-              from room_info
-              where is_deleted = 0
-                and is_release = ${@top.crcbest.model.enums.ReleaseStatus@RELEASED.getCode()}
-              group by apartment_id) tc
-             on ai.id = tc.apartment_id
-                 left join
-             (select apartment_id,
-                     count(*) cnt
-              from lease_agreement
-              where is_deleted = 0
-                and status in (
-                ${@top.crcbest.model.enums.LeaseStatus@SIGNED.getCode()},
-                ${@top.crcbest.model.enums.LeaseStatus@WITHDRAWING.getCode()}
-                )
-              group by apartment_id) cc
-             on ai.id = cc.apartment_id
+
+<!--    查出所有公寓信息-->
+<!--    select * from apartment_info where is_delete = 0;-->
+<!--    查出所有公寓的房间总数-->
+<!--    select apartment_id, count(id) as total_room_count  from room_info where is_deleted = 0 and is_release = 1 group by apartment_id;-->
+<!--    查出公寓在住房的数量。总数减去在住的数量即空房数量-->
+<!--    select apartment_id, count(id) as count_room from lease_agreement where is_deleted = 0 and status in (2,5) group by apartment_id-->
+
+<!--    1和2连接即得到ApartmentItemVO，和3连接能加上被住的房间-->
+<!--    由上面构成的表在进行查询计算得到空闲房间（一直套娃增大表）-->
+
+    <select id="pageApartmentItemByQuery" resultType="top.crcbest.web.admin.vo.apartment.ApartmentItemVo">
+        select t4.*, (t4.total_room_count - t4.room_count) as 'free_room_count' from
+                        (select t1.*, ifnull(t2.total_room_count,0) as 'total_room_count', ifnull(t3.count_room, 0) as 'room_count' from
+                            (select * from apartment_info where is_deleted = 0) t1
+                            left join
+                            (select apartment_id, count(id) as total_room_count  from room_info where is_deleted = 0 and is_release = 1 group by apartment_id) t2
+                            on t1.id = t2.apartment_id
+                            left join
+                            (select apartment_id, count(id) as count_room from lease_agreement where is_deleted = 0 and status in (2,5) group by apartment_id) t3
+                          on t1.id = t3.apartment_id) t4
+        <where>
+            <if test="queryVo.provinceId!= null and queryVo.provinceId != ''">
+                and t4.province_id = #{queryVo.provinceId}
+            </if>
+            <if test="queryVo.cityId!= null and queryVo.cityId != ''">
+                and t4.city_id = #{queryVo.cityId}
+            </if>
+            <if test="queryVo.districtId!= null and queryVo.districtId != ''">
+                and t4.district_id = #{queryVo.districtId}
+            </if>
+        </where>
     </select>
-    <select id="selectApartmentById" resultType="top.crcbest.model.entity.ApartmentInfo">
-        select id,
-               name,
-               introduction,
-               district_id,
-               district_name,
-               city_id,
-               city_name,
-               province_id,
-               province_name,
-               address_detail,
-               latitude,
-               longitude,
-               phone,
-               is_release
-        from apartment_info
-        where id = #{apartmentId}
-    </select>
+
+
 </mapper>

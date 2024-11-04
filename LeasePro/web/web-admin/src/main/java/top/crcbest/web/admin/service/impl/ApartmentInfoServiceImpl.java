@@ -1,6 +1,8 @@
 package top.crcbest.web.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import top.crcbest.web.admin.mapper.ApartmentInfoMapper;
 import top.crcbest.web.admin.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import top.crcbest.web.admin.vo.apartment.ApartmentItemVo;
+import top.crcbest.web.admin.vo.apartment.ApartmentQueryVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentSubmitVo;
 
 import java.util.List;
@@ -36,6 +40,8 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     @Autowired
     GraphInfoService graphInfoService;
 
+    @Autowired
+    ApartmentInfoMapper apartmentInfoMapper;
     @Override
     public void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo) {
         //1.保存和更新
@@ -112,5 +118,10 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 //                            graphInfo.setItemId(apartmentId);
 //                        });
 
+    }
+
+    @Override
+    public void pageApartmentItemByQuery(IPage<ApartmentItemVo> page, ApartmentQueryVo queryVo) {
+       apartmentInfoMapper.pageApartmentItemByQuery(page, queryVo);
     }
 }

@@ -17,4 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ApartmentInfoService extends IService<ApartmentInfo> {
 
     void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo);
+
+    void pageApartmentItemByQuery(IPage<ApartmentItemVo> page, ApartmentQueryVo queryVo);
 }
