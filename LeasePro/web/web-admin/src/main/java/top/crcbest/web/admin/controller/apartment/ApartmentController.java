@@ -1,9 +1,12 @@
 package top.crcbest.web.admin.controller.apartment;
 
 
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import top.crcbest.common.result.Result;
 import top.crcbest.model.entity.ApartmentInfo;
 import top.crcbest.model.enums.ReleaseStatus;
+import top.crcbest.web.admin.service.ApartmentInfoService;
 import top.crcbest.web.admin.vo.apartment.ApartmentDetailVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentItemVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentQueryVo;
@@ -21,9 +24,14 @@ import java.util.List;
 @RequestMapping("/admin/apartment")
 public class ApartmentController {
 
+    @Autowired
+    private ApartmentInfoService apartmentInfoService;
+
     @Operation(summary = "保存或更新公寓信息")
     @PostMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody ApartmentSubmitVo apartmentSubmitVo) {
+        //由于业务复杂，需要自定义方法
+        apartmentInfoService.saveOrUpdateApartment(apartmentSubmitVo);
         return Result.ok();
     }
 
