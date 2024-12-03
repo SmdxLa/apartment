@@ -38,5 +38,30 @@
         </where>
     </select>
 
+    <select id="getApartmentDetailById" resultType="top.crcbest.web.admin.vo.apartment.ApartmentDetailVo">
+        select * from
+        (select t1.id as apartment_id, t1.name as apartment_name, t3.name as facility_name, t3.icon as facility_icon
+        from apartment_info t1
+        left join apartment_facility t2 on t1.id = t2.apartment_id
+        inner join facility_info t3 on t2.facility_id = t3.id and t3.type = 1
+        where t1.is_deleted = 0 and t2.is_deleted = 0 and t3.is_deleted = 0)t21
+        left join
+        (select t1.id, t1.name, t3.name as lable_name
+        from apartment_info t1
+        left join apartment_label t2 on t1.id = t2.apartment_id
+        inner join label_info t3 on t2.label_id = t3.id and t3.type = 1
+        where t1.is_deleted = 0 and t2.is_deleted = 0 and t3.is_deleted = 0)t22
+        on t21.apartment_id = t22.id
+        left join
+        (select t1.id, t1.name, t1.name as graph_name, t1.item_id, t1.url
+        from graph_info t1
+        where t1.is_deleted = 0 and t1.item_type = 1)t23
+        on t21.apartment_id = t23.item_id
+        <where>
+            <if test="id!= null and id != ''">
+                and t21.apartment_id = #{id}
+            </if>
+        </where>
+    </select>
 
 </mapper>

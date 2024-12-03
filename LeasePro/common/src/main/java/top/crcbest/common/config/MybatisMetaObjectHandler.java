@@ -5,6 +5,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author crc
@@ -16,12 +17,15 @@ public class MybatisMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createDate", LocalDateTime::now, LocalDateTime.class);
-        this.strictInsertFill(metaObject, "updateDate", LocalDateTime::now, LocalDateTime.class);
+//        this.strictInsertFill(metaObject, "createDate", LocalDateTime::now, LocalDateTime.class);
+//        this.strictInsertFill(metaObject, "updateDate", LocalDateTime::now, LocalDateTime.class);
+        this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
+        this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "updateDate", LocalDateTime::now, LocalDateTime.class);
+//        this.strictUpdateFill(metaObject, "updateDate", LocalDateTime::now, LocalDateTime.class);
+        this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
     }
 }

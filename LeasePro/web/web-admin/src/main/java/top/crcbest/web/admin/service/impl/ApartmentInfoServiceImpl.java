@@ -12,6 +12,7 @@ import top.crcbest.web.admin.mapper.ApartmentInfoMapper;
 import top.crcbest.web.admin.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import top.crcbest.web.admin.vo.apartment.ApartmentDetailVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentItemVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentQueryVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentSubmitVo;
@@ -44,24 +45,29 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     ApartmentInfoMapper apartmentInfoMapper;
     @Override
     public void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo) {
-        //1.保存和更新
-        super.saveOrUpdate(apartmentSubmitVo);
-        Long apartmentId = apartmentSubmitVo.getId();
+        //1.获取公寓id
+        Long theApartmentId = apartmentSubmitVo.getId();
 
-        //2.更新需要先删除原有的关系信息
+        //2.判断是更新还是保存，更新需要先删除原有的关系信息
         //如果ID不为空，说明是更新操作，需要先删除原有的关系信息
-        Boolean flag = (apartmentId!= null && apartmentId != 0);
+        Boolean flag = (theApartmentId!= null && theApartmentId != 0);
 
         if(flag){
             //只要是公寓的id，直接删除
-            apartmentFacilityService.remove(new LambdaQueryWrapper<ApartmentFacility>().eq(ApartmentFacility::getApartmentId, apartmentId));
-            apartmentFeeValueService.remove(new LambdaQueryWrapper<ApartmentFeeValue>().eq(ApartmentFeeValue::getApartmentId, apartmentId));
-            apartmentLabelService.remove(new LambdaQueryWrapper<ApartmentLabel>().eq(ApartmentLabel::getApartmentId, apartmentId));
+            apartmentFacilityService.remove(new LambdaQueryWrapper<ApartmentFacility>().eq(ApartmentFacility::getApartmentId, theApartmentId));
+            apartmentFeeValueService.remove(new LambdaQueryWrapper<ApartmentFeeValue>().eq(ApartmentFeeValue::getApartmentId, theApartmentId));
+            apartmentLabelService.remove(new LambdaQueryWrapper<ApartmentLabel>().eq(ApartmentLabel::getApartmentId, theApartmentId));
             //因为图片可能是房间的，所以要加上itemType
-            graphInfoService.remove(new LambdaQueryWrapper<GraphInfo>().eq(GraphInfo::getItemId, apartmentId).eq(GraphInfo::getItemType, ItemType.APARTMENT));
+            graphInfoService.remove(new LambdaQueryWrapper<GraphInfo>().eq(GraphInfo::getItemId, theApartmentId).eq(GraphInfo::getItemType, ItemType.APARTMENT));
         }
 
-        //3.保存和其他表的关系信息
+        //3.保存公寓信息
+        super.saveOrUpdate(apartmentSubmitVo);//保存或更新公寓信息
+
+        //如果是保存，在saveOrUpdate后才能获取到id值，所以需要再次获取
+        Long apartmentId = apartmentSubmitVo.getId();
+
+        //保存和其他表的关系信息
         //3.1配套
         apartmentSubmitVo.getFacilityInfoIds()
                 .stream()//变成流
@@ -123,5 +129,11 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     @Override
     public void pageApartmentItemByQuery(IPage<ApartmentItemVo> page, ApartmentQueryVo queryVo) {
        apartmentInfoMapper.pageApartmentItemByQuery(page, queryVo);
+    }
+
+    @Override
+    public ApartmentDetailVo getApartmentDetailById(Long id) {
+        apartmentInfoMapper.getApartmentDetailById(id);
+        return null;
     }
 }

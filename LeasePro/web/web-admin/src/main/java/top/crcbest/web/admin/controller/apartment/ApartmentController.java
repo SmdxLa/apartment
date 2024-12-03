@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import top.crcbest.common.result.Result;
 import top.crcbest.model.entity.ApartmentInfo;
 import top.crcbest.model.enums.ReleaseStatus;
+import top.crcbest.web.admin.service.ApartmentFacilityService;
 import top.crcbest.web.admin.service.ApartmentInfoService;
 import top.crcbest.web.admin.vo.apartment.ApartmentDetailVo;
 import top.crcbest.web.admin.vo.apartment.ApartmentItemVo;
@@ -28,6 +29,7 @@ public class ApartmentController {
     @Autowired
     private ApartmentInfoService apartmentInfoService;
 
+
     @Operation(summary = "保存或更新公寓信息")
     @PostMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody ApartmentSubmitVo apartmentSubmitVo) {
@@ -47,7 +49,8 @@ public class ApartmentController {
     @Operation(summary = "根据ID获取公寓详细信息")
     @GetMapping("getDetailById")
     public Result<ApartmentDetailVo> getDetailById(@RequestParam Long id) {
-        return Result.ok();
+        ApartmentDetailVo apartmentDetailVo = apartmentInfoService.getApartmentDetailById(id);
+        return Result.ok(apartmentDetailVo);
     }
 
     @Operation(summary = "根据id删除公寓信息")

@@ -15,6 +15,8 @@ import top.crcbest.web.admin.vo.apartment.ApartmentQueryVo;
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
     IPage<ApartmentItemVo> pageApartmentItemByQuery(IPage<ApartmentItemVo> page, ApartmentQueryVo queryVo);
+
+    void getApartmentDetailById(Long id);
 }
 
 
